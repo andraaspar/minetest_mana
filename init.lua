@@ -290,15 +290,20 @@ else
 	
 	function mana.hud_add(playername)
 		local player = minetest.get_player_by_name(playername)
+		local level = mana.get(playername) / 10
+		local max = mana.getmax(playername) / 10
+		local y = minetest.get_modpath("stamina") == nil and -130 or -110
 		local id = player:hud_add({
-			hud_elem_type = "text",
+			name = "mana",
+			hud_elem_type = "statbar",
 			position = { x = 0.5, y=1 },
-			text = mana.manastring(playername),
-			scale = { x = 0, y = 0 },
+			size = {x = 24, y = 24},
+			text = "mana_icon.png",
+			text2 = "mana_bgicon.png",
+			item = max,
 			alignment = { x = 1, y = 0},
-			direction = 1,
-			number = 0xFFFFFF,
-			offset = { x = -262, y = -103}
+			number = level,
+			offset = { x = -266, y = y}
 		})
 		mana.playerlist[playername].hudid = id
 		return id
@@ -306,7 +311,7 @@ else
 	
 	function mana.hud_update(playername)
 		local player = minetest.get_player_by_name(playername)
-		player:hud_change(mana.playerlist[playername].hudid, "text", mana.manastring(playername))
+		player:hud_change(mana.playerlist[playername].hudid, "number", mana.get(playername) / 10)
 	end
 	
 	function mana.hud_remove(playername)
